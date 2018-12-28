@@ -1,0 +1,12 @@
+{
+    "name": "FHIRSubscriptions",
+    "description": "A basic subscription flow, particularly for encounters",
+    "version": "0.0.1",
+    "dependencies": {},
+    "node-red": {
+        "settings": {
+            "flowFile": "flows_davids-MBP.json",
+            "credentialsFile": "flows_davids-MBP_cred.json"
+        }
+    }
+}
