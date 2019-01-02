@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html ng-app="subsApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Subscriptions</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.5/angular.min.js"></script>
+    <script src="./ui-bootstrap-tpls-2.5.0.min.js"></script>
+
+
+    <script>
+
+        angular.module('subsApp', ['ui.bootstrap']);
+
+/*
+        angular.module('subsApp', ['ui.bootstrap'])
+            .controller('subsCtrl', function($scope,$http) {
+                $scope.test = 'hello world'
+                $scope.input = {}
+                $scope.find = function(name) {
+                    let qry = '/fhir/Patient?name='+name;
+                    $http.get(qry).then(
+                        function(data) {
+                            console.log(data)
+                            $scope.patientList = data.data;
+                        },
+                        function(err) {
+                            console.log(err)
+                        }
+                    )
+                };
+
+                $scope.getPatientDisplay = function(patient) {
+                    let name = patient.name;
+                    let disp = '';
+                    if (patient.name) {
+                        if (patient.name[0].given) {
+                            patient.name[0].given.forEach(function(g){
+                                disp += g + " ";
+
+                            })
+                        }
+                        disp += patient.name[0].family;
+                    }
+
+                    return disp;
+                };
+
+                $http.get('/fhir/Subscription').then(
+                    function(data) {
+                        console.log(data)
+                    },
+                    function(err) {
+                        console.log(err)
+                    }
+                )
+
+
+            })
+        */
+
+    </script>
+    <script src="./indexCtrl.js"></script>
+</head>
+
+<body>
+    <div ng-controller = 'subsCtrl' class="container-fluid">
+        <h1>test</h1>
+        {{test}}
+
+        <uib-tabset>
+            <uib-tab heading="Current Subscriptions">
+
+                <table class="table table-sm">
+                    <tr><th>Reason</th><th>Criteria</th><th>Channel type</th><th>Channel endpoint</th><th>Status</th></tr>
+                    <tr ng-repeat="ent in subscriptions.entry">
+                        <td>{{ent.resource.reason}}</td>
+                        <td>{{ent.resource.criteria}}</td>
+                        <td>{{ent.resource.channel.type}}</td>
+                        <td>{{ent.resource.channel.endpoint}}</td>
+                        <td>{{ent.resource.status}}</td>
+                    </tr>
+                </table>
+
+
+            </uib-tab>
+
+            <uib-tab heading="New Encounter Subscriptions">
+                <br/>
+                <div class="row">
+                    <div class="col-md-2">
+                        <input type="text" class="form-control" ng-model="input.patient" placeholder="Name to search on"/>
+                    </div>
+
+                    <div class="col-md-1">
+                        <button class="btn btn-primary" ng-click="find(input.patient)">Find</button>
+                    </div>
+                    <div class="col-md-4">
+                        <label>Matching patients</label>
+                        <div ng-hide = "selectedPatient">
+                            <div class="list-group">
+                                <div class="list-group-item" ng-click="selectPatient(entry.resource)"
+                                     ng-repeat = 'entry in patientList.entry' style="cursor: pointer">
+                                    {{getPatientDisplay(entry.resource)}}
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-md-4">
+                        <strong>Selected Patient</strong>
+                        <div>
+                            {{getPatientDisplay(selectedPatient)}}
+                        </div>
+
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" ng-show="selectedPatient" ng-click="makeSubscription(selectedPatient)">
+                    Make Subscription
+                </button>
+
+            </uib-tab>
+
+            <uib-tab heading="New General Subscription">
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <form>
+                            <div class="form-group">
+                                <label>Criteria</label>
+                                <input type="text" class="form-control" ng-model="input.patient" placeholder="eg Observation?subject=Patient/100"/>
+                                <small class="form-text text-muted pull-right">The search query for the notification</small>
+                            </div>
+
+                            <button class="btn btn-primary" ng-click="save()">Save</button>
+                        </form>
+                    </div>
+                </div>
+            </uib-tab>
+
+        </uib-tabset>
+
+    </div>
+
+
+</body>
+</html>
